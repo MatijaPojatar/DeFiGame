@@ -7,7 +7,8 @@ function animateMovement(
   movables,
   canvas,
   boundaries,
-  ctx
+  ctx,
+  fireball
 ) {
   const keys = {
     w: {
@@ -20,6 +21,9 @@ function animateMovement(
       pressed: false,
     },
     d: {
+      pressed: false,
+    },
+    j: {
       pressed: false,
     },
   };
@@ -48,6 +52,10 @@ function animateMovement(
         lastKey = "s";
         break;
       }
+      case "j": {
+        keys.j.pressed = true;
+        break;
+      }
     }
   });
 
@@ -69,22 +77,16 @@ function animateMovement(
         keys.s.pressed = false;
         break;
       }
+      case "j": {
+        keys.j.pressed = false;
+        break;
+      }
     }
   });
 
   function animate() {
     window.requestAnimationFrame(() => {
-      animate(
-        player,
-        background,
-        foreground,
-        movables,
-        keys,
-        lastKey,
-        canvas,
-        boundaries,
-        ctx
-      );
+      animate();
     });
     background.draw(canvas);
     boundaries.forEach((b) => {
@@ -92,12 +94,16 @@ function animateMovement(
     });
     player.draw(canvas);
     foreground.draw(canvas);
+    fireball.draw(canvas);
+
+    //moving
 
     let moving = true;
     player.moving = false;
     if (keys.w.pressed && lastKey === "w") {
       player.moving = true;
       player.image = player.sprites.up;
+      if(!fireball.used)fireball.direction="up"
       for (let i = 0; i < boundaries.length; i++) {
         const boundary = boundaries[i];
         if (
@@ -124,6 +130,7 @@ function animateMovement(
     } else if (keys.s.pressed && lastKey === "s") {
       player.moving = true;
       player.image = player.sprites.down;
+      if(!fireball.used)fireball.direction="down"
       for (let i = 0; i < boundaries.length; i++) {
         const boundary = boundaries[i];
         if (
@@ -150,6 +157,7 @@ function animateMovement(
     } else if (keys.a.pressed && lastKey === "a") {
       player.moving = true;
       player.image = player.sprites.left;
+      if(!fireball.used)fireball.direction="left"
       for (let i = 0; i < boundaries.length; i++) {
         const boundary = boundaries[i];
         if (
@@ -176,6 +184,7 @@ function animateMovement(
     } else if (keys.d.pressed && lastKey === "d") {
       player.moving = true;
       player.image = player.sprites.right;
+      if(!fireball.used)fireball.direction="right"
       for (let i = 0; i < boundaries.length; i++) {
         const boundary = boundaries[i];
         if (
@@ -199,6 +208,13 @@ function animateMovement(
           movable.position.x -= 3;
         });
       }
+    }
+
+    //magic
+    if (keys.j.pressed) {
+        console.log("FIREBALL")
+        if(!fireball.used)fireball.position={x:player.position.x,y:player.position.y}
+        fireball.used=true
     }
   }
   animate();

@@ -24,8 +24,20 @@ export default function Board() {
     const playerLeftImage = new Image();
     playerLeftImage.src = "/sprites/player/playerLeft.png";
 
+    const girlUpImage = new Image();
+    girlUpImage.src = "/sprites/girl_char/girl_char_up.png";
+    const girlDownImage = new Image();
+    girlDownImage.src = "/sprites/girl_char/girl_char_down.png";
+    const girlRightImage = new Image();
+    girlRightImage.src = "/sprites/girl_char/girl_char_right.png";
+    const girlLeftImage = new Image();
+    girlLeftImage.src = "/sprites/girl_char/girl_char_left.png";
+
     const foregroundImage = new Image();
     foregroundImage.src = "/foregrounds/foregroundFirstLevel.png";
+
+    const fireballImage = new Image();
+    fireballImage.src = "/magic/fireball.png";
 
     //sprites
 
@@ -54,12 +66,40 @@ export default function Board() {
       },
     });
 
+    const girl = new Sprites.Sprite({
+      position: {
+        x: canvas.width / 2 - girlDownImage.width / 4 / 2,
+        y: canvas.height / 2 - girlDownImage.width / 4 / 2,
+      },
+      image: girlDownImage,
+      frames: {
+        max: 4,
+      },
+      sprites: {
+        up: girlUpImage,
+        down: girlDownImage,
+        right: girlRightImage,
+        left: girlLeftImage,
+      },
+    });
+
     const foreground = new Sprites.Sprite({
       position: {
         x: 0,
         y: 0,
       },
       image: foregroundImage,
+    });
+
+    const fireball = new Sprites.Magic({
+      position: {
+        x: 0,
+        y: 0,
+      },
+      image: fireballImage,
+      frames: {
+        max: 7,
+      },
     });
 
     //collisions
@@ -70,13 +110,14 @@ export default function Board() {
     let movables = [background, foreground, ...boundaries];
 
     AnimationService.animateMovement(
-      player,
+      girl,
       background,
       foreground,
       movables,
       canvas,
       boundaries,
       ctx,
+      fireball
     );
 
     //music
