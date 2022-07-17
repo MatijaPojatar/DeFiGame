@@ -3,12 +3,17 @@ import { Howl } from "howler";
 import Sprites from "../Classes/Sprites";
 import AnimationService from "../Services/AnimationService";
 import UtilsService from "../Services/UtilsService";
+import firebase from "firebase/compat/app";
+import "firebase/compat/auth";
+import "firebase/compat/database";
 
 export default function Board() {
   const canvasRef = useRef(null);
+  let players = {};
 
   useEffect(() => {
     //init
+
     const canvas = canvasRef.current;
     const ctx = canvas.getContext("2d");
 
@@ -39,6 +44,143 @@ export default function Board() {
     const fireballImage = new Image();
     fireballImage.src = "/magic/fireball.png";
 
+    //multiplayer
+
+    const allPlayersRef = firebase.database().ref("players");
+
+    let playerId;
+    let playerRef;
+
+    firebase.auth().onAuthStateChanged((user) => {
+      console.log(user);
+      if (user) {
+        playerId = user.uid;
+        playerRef = firebase.database().ref(`players/${playerId}`);
+
+        playerRef.set({
+          id: playerId,
+          x: canvas.width / 2 - girlDownImage.width / 4 / 2,
+          y: canvas.height / 2 - girlDownImage.width / 4 / 2,
+          sprite: "down",
+          val:0,
+          nickname: "girl",
+        });
+
+        playerRef.onDisconnect().remove();
+      } else {
+      }
+    });
+
+    allPlayersRef.on("value", (snapshot) => {
+      let playersTemp = snapshot.val() || {};
+      Object.keys(playersTemp).forEach((key) => {
+        if (key === playerId) return;
+        players[key] = playersTemp[key];
+      });
+    });
+
+    allPlayersRef.on("child_added", (snapshot) => {
+      const addedPlayer = snapshot.val();
+      console.log("NEW PLAYER");
+      console.log(addedPlayer);
+      if (addedPlayer.id !== playerId) {
+        players[addedPlayer.id] = addedPlayer;
+      }
+    });
+
+    const callbackLoadPlayers = () => {
+      let allPlayerSprites = [];
+      if (Object.keys(players).length) {
+        Object.keys(players).forEach((key) => {
+          let tempImg=new Image();
+          if(players[key].sprite==="up"){
+            console.log("UP")
+            console.log(players[key].nickname)
+            switch(players[key].nickname){
+              case "girl":{
+                console.log("UP GIRL")
+                tempImg.src = "/sprites/girl_char/girl_char_up.png";
+                break;
+              }
+              case "player":{
+                tempImg.src = "/sprites/player/playerUp.png";
+                break;
+              }
+            }
+          }else if(players[key].sprite==="left"){
+            switch(players[key].nickname){
+              case "girl":{
+                tempImg.src = "/sprites/girl_char/girl_char_left.png";
+                break;
+              }
+              case "player":{
+                tempImg.src = "/sprites/player/playerLeft.png";
+                break;
+              }
+            }
+          }else if(players[key].sprite==="right"){
+            switch(players[key].nickname){
+              case "girl":{
+                tempImg.src = "/sprites/girl_char/girl_char_right.png";
+                break;
+              }
+              case "player":{
+                tempImg.src = "/sprites/player/playerRight.png";
+                break;
+              }
+            }
+          }else{
+            switch(players[key].nickname){
+              case "girl":{
+                tempImg.src = "/sprites/girl_char/girl_char_down.png";
+                break;
+              }
+              case "player":{
+                tempImg.src = "/sprites/player/playerDown.png";
+                break;
+              }
+            }
+          }
+
+          allPlayerSprites.push(
+            new Sprites.Sprite({
+              position: {
+                x: players[key].x,
+                y: players[key].y,
+              },
+              id: key,
+              image: tempImg,
+              frames: {
+                max: 4,
+              },
+              sprites: {
+                up: playerUpImage,
+                down: playerDownImage,
+                right: playerRightImage,
+                left: playerLeftImage,
+              },
+              val:players[key].val
+            })
+          );
+        });
+      }
+      //console.log(allPlayerSprites)
+      return allPlayerSprites;
+    };
+
+    const callbackSave = (x, y,direction,val,nickname) => {
+      if (playerRef !== undefined) {
+        playerRef.set({
+          id: playerId,
+          x: x,
+          y: y,
+          sprite: direction,
+          val:val,
+          nickname: nickname
+        });
+      }
+    };
+
     //sprites
 
     const background = new Sprites.Sprite({
@@ -49,28 +191,12 @@ export default function Board() {
       image: image,
     });
 
-    const player = new Sprites.Sprite({
-      position: {
-        x: canvas.width / 2 - playerDownImage.width / 4 / 2,
-        y: canvas.height / 2 - playerDownImage.width / 4 / 2,
-      },
-      image: playerDownImage,
-      frames: {
-        max: 4,
-      },
-      sprites: {
-        up: playerUpImage,
-        down: playerDownImage,
-        right: playerRightImage,
-        left: playerLeftImage,
-      },
-    });
-
     const girl = new Sprites.Sprite({
       position: {
         x: canvas.width / 2 - girlDownImage.width / 4 / 2,
         y: canvas.height / 2 - girlDownImage.width / 4 / 2,
       },
+      id: playerId,
       image: girlDownImage,
       frames: {
         max: 4,
@@ -81,6 +207,7 @@ export default function Board() {
         right: girlRightImage,
         left: girlLeftImage,
       },
+      nickname: "girl"
     });
 
     const foreground = new Sprites.Sprite({
@@ -117,11 +244,13 @@ export default function Board() {
       canvas,
       boundaries,
       ctx,
-      fireball
+      fireball,
+      callbackLoadPlayers,
+      callbackSave
     );
 
     //music
-    let clicked = false;
+    /**let clicked = false;
     window.addEventListener("click", () => {
       if (!clicked) {
         clicked = true;
@@ -134,7 +263,7 @@ export default function Board() {
 
         sound.play();
       }
-    });
+    });*/
   }, []);
 
   return (

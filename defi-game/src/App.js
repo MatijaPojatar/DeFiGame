@@ -1,8 +1,15 @@
 import "./App.css";
-import LevelOne from "./Maps/LevelOne";
-import { VStack,Text,HStack } from "@chakra-ui/react";
+import { VStack, Text, HStack } from "@chakra-ui/react";
+import { useEffect,useState } from "react";
+import GameScreen from "./Components/GameScreen";
 
 function App() {
+
+
+  useEffect(() => {
+
+  }, []);
+
   return (
     <div className="App">
       <div style={{ backgroundImage: "url(/background.jpg)" }}>
@@ -17,7 +24,7 @@ function App() {
               DeFi Hero
             </Text>
           </HStack>
-          <LevelOne />
+          <GameScreen/>
         </VStack>
       </div>
     </div>

@@ -1,20 +1,37 @@
 import { Howl } from "howler";
 
 class Sprite {
-  constructor({ position, velocity, image, frames = { max: 1 }, sprites }) {
+  constructor({ position, velocity, image, frames = { max: 1 }, sprites,id,val=0,nickname }) {
     this.position = position;
+    this.id=id
     this.image = image;
-    this.frames = { ...frames, val: 0, elapsed: 0 };
+    this.frames = { ...frames,val, elapsed: 0 };
     this.image.onload = () => {
       this.width = this.image.width / this.frames.max;
       this.height = this.image.height;
     };
     this.moving = false;
     this.sprites = sprites;
+    this.nickname=nickname
   }
 
-  draw(canvas) {
+  draw(canvas, multi = false,background) {
     const ctx = canvas.getContext("2d");
+    if (multi) {
+      ctx.drawImage(
+        this.image,
+        this.frames.val * (this.image.width / this.frames.max),
+        0,
+        this.image.width / this.frames.max,
+        this.image.height,
+        this.position.x+background.x_offset,
+        this.position.y+background.y_offset,
+        this.image.width / this.frames.max,
+        this.image.height
+      );
+      return;
+    }
+
     ctx.drawImage(
       this.image,
       this.frames.val * this.width,
@@ -26,6 +43,12 @@ class Sprite {
       this.image.width / this.frames.max,
       this.image.height
     );
+    ctx.fillStyle = "green";
+    ctx.beginPath();
+    ctx.moveTo(this.position.x+5, this.position.y-30);
+    ctx.lineTo(this.position.x+this.width-5, this.position.y-30);
+    ctx.lineTo(this.position.x+this.width/2, this.position.y-5);
+    ctx.fill();
     if (this.moving) {
       if (this.frames.max > 1) {
         this.frames.elapsed++;
@@ -40,7 +63,13 @@ class Sprite {
 }
 
 class Magic {
-  constructor({ position, velocity, image, frames = { max: 1 },direction="down" }) {
+  constructor({
+    position,
+    velocity,
+    image,
+    frames = { max: 1 },
+    direction = "down",
+  }) {
     this.position = position;
     this.image = image;
     this.frames = { ...frames, val: 0, elapsed: 0 };
@@ -49,7 +78,7 @@ class Magic {
       this.height = this.image.height;
     };
     this.used = false;
-    this.direction=direction
+    this.direction = direction;
   }
 
   draw(canvas) {
@@ -97,7 +126,7 @@ class Magic {
             src: ["soundeffect/fireball.wav"],
             html5: true,
           });
-  
+
           sound.play();
           this.used = false;
         }
