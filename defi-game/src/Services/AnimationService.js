@@ -1,7 +1,9 @@
 import CalculationService from "./CalculationService";
+import Sprites from "../Classes/Sprites";
 
 function animateMovement(
   player,
+  config,
   background,
   foreground,
   movables,
@@ -9,8 +11,7 @@ function animateMovement(
   boundaries,
   ctx,
   fireball,
-  callbackLoadPlayers,
-  callbackSave
+  players
 ) {
 
   const keys = {
@@ -87,11 +88,98 @@ function animateMovement(
     }
   });
 
+  const callbackLoadPlayers = () => {
+    let allPlayerSprites = [];
+    if (Object.keys(players).length) {
+      Object.keys(players).forEach((key) => {
+        let tempImg = new Image();
+        if (players[key].sprite === "up") {
+          console.log("UP");
+          console.log(players[key].nickname);
+          switch (players[key].nickname) {
+            case "girl": {
+              console.log("UP GIRL");
+              tempImg.src = "/sprites/girl_char/girl_char_up.png";
+              break;
+            }
+            case "player": {
+              tempImg.src = "/sprites/player/playerUp.png";
+              break;
+            }
+          }
+        } else if (players[key].sprite === "left") {
+          switch (players[key].nickname) {
+            case "girl": {
+              tempImg.src = "/sprites/girl_char/girl_char_left.png";
+              break;
+            }
+            case "player": {
+              tempImg.src = "/sprites/player/playerLeft.png";
+              break;
+            }
+          }
+        } else if (players[key].sprite === "right") {
+          switch (players[key].nickname) {
+            case "girl": {
+              tempImg.src = "/sprites/girl_char/girl_char_right.png";
+              break;
+            }
+            case "player": {
+              tempImg.src = "/sprites/player/playerRight.png";
+              break;
+            }
+          }
+        } else {
+          switch (players[key].nickname) {
+            case "girl": {
+              tempImg.src = "/sprites/girl_char/girl_char_down.png";
+              break;
+            }
+            case "player": {
+              tempImg.src = "/sprites/player/playerDown.png";
+              break;
+            }
+          }
+        }
+  
+        allPlayerSprites.push(
+          new Sprites.Sprite({
+            position: {
+              x: players[key].x,
+              y: players[key].y,
+            },
+            id: key,
+            image: tempImg,
+            frames: {
+              max: 4,
+            },
+            val: players[key].val,
+          })
+        );
+      });
+    }
+    //console.log(allPlayerSprites)
+    return allPlayerSprites;
+  };
+  
+  const callbackSave = (x, y, direction, val, nickname) => {
+    if (config.playerRef !== undefined) {
+      config.playerRef.set({
+        id: config.playerId,
+        x: x,
+        y: y,
+        sprite: direction,
+        val: val,
+        nickname: nickname,
+      });
+    }
+  };
+
   function animate() {
     window.requestAnimationFrame(() => {
       animate();
     });
-    let otherPlayers = callbackLoadPlayers();
+    let otherPlayers = callbackLoadPlayers(players);
     //console.log(otherPlayers)
     background.draw(canvas);
     boundaries.forEach((b) => {

@@ -1,0 +1,51 @@
+@import url(https://fonts.googleapis.com/css?family=Nosifer|Codystar:300,400|Poiret+One|Limelight|Shojumaru|Titan+One|UnifrakturMaguntia|Press+Start+2P|Creepster|Playball|Griffy|Lobster|Bevan|Racing+Sans+One|Fontdiner+Swanky|Wire+One|Lato:100,300,400|Graduate);
+body {
+  padding: 0;
+  margin: 0;
+}
+
+.block {
+  width: 100%;
+}
+
+h1 {
+  font-size: 2rem;
+  font-weight: normal;
+}
+
+.style-artic {
+  background: linear-gradient(to bottom, #14c8ff 0%, #0092d6 100%);
+}
+
+.style-artic h1 {
+  color: #fff;
+  font-family: "Shojumaru";
+}
+
+.style-samurai {
+  background: linear-gradient(90deg, #c21500 10%, #ffc500 90%);
+}
+
+.style-samurai h1 {
+  color: #000;
+  font-family: "Shojumaru";
+}
+
+.style-princess {
+  background: #984c86;
+}
+
+.style-princess h1 {
+  font-family: "Shojumaru";
+  color: rgba(0, 0, 0, 0.5);
+  text-shadow: 2px 8px 6px rgba(0, 0, 0, 0.2),
+    0px -5px 35px rgba(255, 255, 255, 0.3);
+}
+
+.style-title {
+    font-family: "Shojumaru";
+    font-size: 6rem;
+}
+
+/* */
+

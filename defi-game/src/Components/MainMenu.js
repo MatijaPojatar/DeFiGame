@@ -54,6 +54,10 @@ export default function MainMenu() {
     navigate("/game")
   }
 
+  const goToSelect=()=>{
+    navigate("/select")
+  }
+
   return (
     <div className="div">
       <VStack
@@ -106,7 +110,7 @@ export default function MainMenu() {
         <br />
         <Button className="eightbit-btn" onClick={goToGame}>Play Game</Button>
         <br />
-        <Button className="eightbit-btn">Play Game</Button>
+        <Button className="eightbit-btn" onClick={goToSelect}>Select</Button>
         <br />
         <Button className="eightbit-btn">Play Game</Button>
       </VStack>

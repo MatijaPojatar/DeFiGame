@@ -7,13 +7,14 @@ import {
   Route,
 } from "react-router-dom";
 import MainMenu from "./Components/MainMenu";
+import CharSelect from "./Components/CharSelect";
 import Test from "./Components/Test";
 
 function App() {
 
 
   useEffect(() => {
-
+    
   }, []);
 
   return (
@@ -24,6 +25,8 @@ function App() {
           <Route exact path="/game" element={<GameScreen />}>
           </Route>
           <Route exact path="/" element={<MainMenu />}>
+          </Route>
+          <Route exact path="/select" element={<CharSelect />}>
           </Route>
           <Route exact path="/test" element={<Test />}>
           </Route>
