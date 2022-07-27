@@ -62,6 +62,34 @@ class Sprite {
   }
 }
 
+class Background{
+  constructor({ position, image, offset}) {
+    this.position = position;
+    this.offset = offset;
+    this.image = image;
+    this.image.onload = () => {
+      this.width = this.image.width ;
+      this.height = this.image.height;
+    };
+  }
+
+  draw(canvas) {
+    const ctx = canvas.getContext("2d");
+
+    ctx.drawImage(
+      this.image,
+      this.offset.x,
+      this.offset.y,
+      this.image.width ,
+      this.image.height,
+      this.position.x,
+      this.position.y,
+      this.image.width ,
+      this.image.height
+    );
+  }
+}
+
 class Magic {
   constructor({
     position,
@@ -135,4 +163,4 @@ class Magic {
   }
 }
 
-export default { Sprite, Magic };
+export default { Sprite, Magic,Background };

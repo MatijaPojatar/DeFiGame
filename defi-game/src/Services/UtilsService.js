@@ -1,7 +1,7 @@
 import Util from "../Classes/Util"
 import Collisions from "../Constants/Collisions"
 
-const getCollisions = () => {
+const getCollisions = ({x,y}) => {
     let collisionMapTemp = [];
     for (let i = 0; i < Collisions.collisionsFirstLevel.length; i += 70) {
       collisionMapTemp.push(Collisions.collisionsFirstLevel.slice(i, i + 70));
@@ -13,8 +13,8 @@ const getCollisions = () => {
           boundaries.push(
             new Util.Boundary({
               position: {
-                x: j * Util.Boundary.width,
-                y: i * Util.Boundary.height,
+                x: j * Util.Boundary.width+x,
+                y: i * Util.Boundary.height+y,
               },
             })
           );

@@ -13,7 +13,7 @@ const firebaseConfig = {
 
 const app = firebase.initializeApp(firebaseConfig);
 
-const setUpPlayers = (players,config) => {
+const setUpPlayers = async (players,config) => {
   const allPlayersRef = firebase.database().ref("players");
 
   allPlayersRef.on("value", (snapshot) => {
@@ -42,23 +42,33 @@ const setUpPlayers = (players,config) => {
   });
 };
 
-const logMyPlayer = async (config, canvas, image) => {
-  firebase.auth().onAuthStateChanged((user) => {
+const logMyPlayer = async (config, canvas, image,continueInit,nickname) => {
+  firebase.auth().onAuthStateChanged(async (user) => {
     console.log(user);
     if (user) {
       config.playerId = user.uid;
       config.playerRef = firebase.database().ref(`players/${config.playerId}`);
 
-      config.playerRef.set({
-        id: config.playerId,
-        x: canvas.width / 2 - image.width / 4 / 2,
-        y: canvas.height / 2 - image.width / 4 / 2,
-        sprite: "down",
-        val: 0,
-        nickname: "girl",
-      });
+      const getPromise=await config.playerRef.get();
+      let myPlayer=getPromise.val();
+      console.log(myPlayer)
 
-      config.playerRef.onDisconnect().remove();
+      if(!myPlayer){
+        myPlayer={
+          id: config.playerId,
+          x: canvas.width / 2 - image.width / 4 / 2,
+          y: canvas.height / 2 - image.width / 4 / 2,
+          sprite: "down",
+          val: 0,
+          nickname: nickname,
+        }
+        config.playerRef.set(myPlayer);
+      }
+
+      config.playerRef.onDisconnect().remove(async ()=>{
+      });
+      config.check=true
+      continueInit(myPlayer)
     } else {
     }
   });

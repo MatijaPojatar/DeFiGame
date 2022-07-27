@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import Board from "../Utils/Board";
+import Board from "../Components/Board";
 
 export default function LevelOne({nickname}) {
   const backgroundImage = "/clear_maps/FirstLevel.png";
@@ -17,6 +17,7 @@ export default function LevelOne({nickname}) {
       playerLeftImageSrc={"/sprites/"+nickname+"/left.png"}
       playerUpImageSrc={"/sprites/"+nickname+"/up.png"}
       playerRightImageSrc={"/sprites/"+nickname+"/right.png"}
+      nickname={nickname}
     />
   );
 }

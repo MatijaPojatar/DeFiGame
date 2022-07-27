@@ -1,0 +1,18 @@
+.Hud {
+  display: flex;
+  position: absolute;
+  top: 4em;
+  left: 7em;
+}
+
+.HeartsGrid {
+  display: grid;
+  grid-template-columns: repeat(10, 40px);
+  margin-bottom: 1em;
+}
+.Heart {
+  width: 32px;
+  margin-right: 6px;
+  margin-bottom: 6px;
+  display: block;
+}

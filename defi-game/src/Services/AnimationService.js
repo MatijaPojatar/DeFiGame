@@ -93,54 +93,7 @@ function animateMovement(
     if (Object.keys(players).length) {
       Object.keys(players).forEach((key) => {
         let tempImg = new Image();
-        if (players[key].sprite === "up") {
-          console.log("UP");
-          console.log(players[key].nickname);
-          switch (players[key].nickname) {
-            case "girl": {
-              console.log("UP GIRL");
-              tempImg.src = "/sprites/girl_char/girl_char_up.png";
-              break;
-            }
-            case "player": {
-              tempImg.src = "/sprites/player/playerUp.png";
-              break;
-            }
-          }
-        } else if (players[key].sprite === "left") {
-          switch (players[key].nickname) {
-            case "girl": {
-              tempImg.src = "/sprites/girl_char/girl_char_left.png";
-              break;
-            }
-            case "player": {
-              tempImg.src = "/sprites/player/playerLeft.png";
-              break;
-            }
-          }
-        } else if (players[key].sprite === "right") {
-          switch (players[key].nickname) {
-            case "girl": {
-              tempImg.src = "/sprites/girl_char/girl_char_right.png";
-              break;
-            }
-            case "player": {
-              tempImg.src = "/sprites/player/playerRight.png";
-              break;
-            }
-          }
-        } else {
-          switch (players[key].nickname) {
-            case "girl": {
-              tempImg.src = "/sprites/girl_char/girl_char_down.png";
-              break;
-            }
-            case "player": {
-              tempImg.src = "/sprites/player/playerDown.png";
-              break;
-            }
-          }
-        }
+        tempImg.src="/sprites/"+players[key].nickname+"/"+players[key].sprite+".png"
   
         allPlayerSprites.push(
           new Sprites.Sprite({
@@ -180,7 +133,6 @@ function animateMovement(
       animate();
     });
     let otherPlayers = callbackLoadPlayers(players);
-    //console.log(otherPlayers)
     background.draw(canvas);
     boundaries.forEach((b) => {
       b.draw(ctx);
