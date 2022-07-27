@@ -7,7 +7,7 @@ import "firebase/compat/database";
 import FirebaseService from "../Services/FirebaseService";
 import { VStack, Text, HStack } from "@chakra-ui/react";
 
-export default function GameScreen({nickname}) {
+export default function GameScreen({charType}) {
   useEffect(() => {
     firebase
       .auth()
@@ -25,7 +25,7 @@ export default function GameScreen({nickname}) {
   return (
     <div style={{ backgroundImage: "url(/background.jpg)" }}>
       <VStack justifyContent="center" alignItems="center" h="100vh">
-        <LevelOne nickname={nickname}/>
+        <LevelOne charType={charType}/>
       </VStack>
     </div>
   );

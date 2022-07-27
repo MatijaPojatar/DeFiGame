@@ -1,7 +1,7 @@
 import { Howl } from "howler";
 
 class Sprite {
-  constructor({ position, velocity, image, frames = { max: 1 }, sprites,id,val=0,nickname }) {
+  constructor({ position, velocity, image, frames = { max: 1 }, sprites,id,val=0,charType,nickname }) {
     this.position = position;
     this.id=id
     this.image = image;
@@ -12,12 +12,21 @@ class Sprite {
     };
     this.moving = false;
     this.sprites = sprites;
+    this.charType=charType
     this.nickname=nickname
   }
 
   draw(canvas, multi = false,background) {
     const ctx = canvas.getContext("2d");
+
+    const shadow=new Image();
+    shadow.src="/effects/Shadow.png"
+
+
     if (multi) {
+      const shadow_x=(this.position.x+background.x_offset+this.image.width / this.frames.max/2)-shadow.width/2
+      const shadow_y=(this.position.y+background.y_offset)+this.image.height/1.4
+      ctx.drawImage(shadow,shadow_x,shadow_y)
       ctx.drawImage(
         this.image,
         this.frames.val * (this.image.width / this.frames.max),
@@ -29,8 +38,16 @@ class Sprite {
         this.image.width / this.frames.max,
         this.image.height
       );
+
+      ctx.fillStyle = "blue";
+      ctx.fillText(this.nickname, this.position.x+background.x_offset, this.position.y+background.y_offset-5);
+
       return;
     }
+
+    const shadow_x=(this.position.x+this.width/2)-shadow.width/2
+    const shadow_y=this.position.y+this.height/1.4
+    ctx.drawImage(shadow,shadow_x,shadow_y)
 
     ctx.drawImage(
       this.image,
@@ -43,12 +60,17 @@ class Sprite {
       this.image.width / this.frames.max,
       this.image.height
     );
-    ctx.fillStyle = "green";
+
+    ctx.fillStyle = "red";
     ctx.beginPath();
-    ctx.moveTo(this.position.x+5, this.position.y-30);
-    ctx.lineTo(this.position.x+this.width-5, this.position.y-30);
+    ctx.moveTo(this.position.x+15, this.position.y-15);
+    ctx.lineTo(this.position.x+this.width-15, this.position.y-15);
     ctx.lineTo(this.position.x+this.width/2, this.position.y-5);
     ctx.fill();
+
+    ctx.fillText(this.nickname, this.position.x, this.position.y-20);
+
+
     if (this.moving) {
       if (this.frames.max > 1) {
         this.frames.elapsed++;

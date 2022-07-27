@@ -93,7 +93,7 @@ function animateMovement(
     if (Object.keys(players).length) {
       Object.keys(players).forEach((key) => {
         let tempImg = new Image();
-        tempImg.src="/sprites/"+players[key].nickname+"/"+players[key].sprite+".png"
+        tempImg.src="/sprites/"+players[key].charType+"/"+players[key].sprite+".png"
   
         allPlayerSprites.push(
           new Sprites.Sprite({
@@ -107,6 +107,8 @@ function animateMovement(
               max: 4,
             },
             val: players[key].val,
+            charType: players[key].charType,
+            nickname: players[key].nickname
           })
         );
       });
@@ -115,7 +117,7 @@ function animateMovement(
     return allPlayerSprites;
   };
   
-  const callbackSave = (x, y, direction, val, nickname) => {
+  const callbackSave = (x, y, direction, val, charType,nickname) => {
     if (config.playerRef !== undefined) {
       config.playerRef.set({
         id: config.playerId,
@@ -123,7 +125,8 @@ function animateMovement(
         y: y,
         sprite: direction,
         val: val,
-        nickname: nickname,
+        charType: charType,
+        nickname: nickname
       });
     }
   };
@@ -281,7 +284,7 @@ function animateMovement(
     else{
       direction="down"
     }
-    callbackSave(player.position.x-background.position.x,player.position.y-background.position.y,direction,player.frames.val,player.nickname)
+    callbackSave(player.position.x-background.position.x,player.position.y-background.position.y,direction,player.frames.val,player.charType,player.nickname)
 
   }
   animate();

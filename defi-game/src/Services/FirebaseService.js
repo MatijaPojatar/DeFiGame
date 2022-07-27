@@ -42,7 +42,7 @@ const setUpPlayers = async (players,config) => {
   });
 };
 
-const logMyPlayer = async (config, canvas, image,continueInit,nickname) => {
+const logMyPlayer = async (config, canvas, image,continueInit,charType) => {
   firebase.auth().onAuthStateChanged(async (user) => {
     console.log(user);
     if (user) {
@@ -60,7 +60,10 @@ const logMyPlayer = async (config, canvas, image,continueInit,nickname) => {
           y: canvas.height / 2 - image.width / 4 / 2,
           sprite: "down",
           val: 0,
-          nickname: nickname,
+          charType: charType,
+          health : 5,
+          maxHealth: 5,
+          nickname: "VitaminS"
         }
         config.playerRef.set(myPlayer);
       }

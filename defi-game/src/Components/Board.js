@@ -1,4 +1,4 @@
-import React, { useRef, useEffect } from "react";
+import React, { useRef, useEffect,useState } from "react";
 import { Howl } from "howler";
 import Sprites from "../Classes/Sprites";
 import AnimationService from "../Services/AnimationService";
@@ -16,9 +16,12 @@ export default function Board({
   playerDownImageSrc,
   playerLeftImageSrc,
   playerRightImageSrc,
-  nickname,
+  charType,
 }) {
   const canvasRef = useRef(null);
+  const [hearts, setHearts] = useState(0);
+  const [maxHearts, setMaxHearts] = useState(0);
+
   let players = {};
 
   let config = { playerId: undefined, playerRef: undefined, check: false };
@@ -33,6 +36,10 @@ export default function Board({
 
       const continueInit = (myPlayer) => {
         console.log(myPlayer);
+
+        setHearts(myPlayer.health)
+        setMaxHearts(myPlayer.maxHealth)
+
         const image = new Image();
         image.src = backgroundImageSrc;
 
@@ -70,14 +77,7 @@ export default function Board({
           }
         }
 
-        //wait for images
-        setTimeout(() => {}, 3000);
-
         //sprites
-
-        console.log("===============")
-        console.log(-(myPlayer.x-(canvas.width / 2 - playerDownImage.width / 4 / 2)))
-        console.log( -(myPlayer.y-(canvas.height / 2 - playerDownImage.width / 4 / 2)))
 
         const background = new Sprites.Background({
           position: {
@@ -107,7 +107,8 @@ export default function Board({
             right: playerRightImage,
             left: playerLeftImage,
           },
-          nickname:myPlayer.nickname,
+          charType:myPlayer.charType,
+          nickname: myPlayer.nickname
         });
 
         const foreground = new Sprites.Background({
@@ -161,7 +162,7 @@ export default function Board({
         canvas,
         playerDownImage,
         continueInit,
-        nickname
+        charType
       );
       await FirebaseService.setUpPlayers(players, config);
 
@@ -186,7 +187,7 @@ export default function Board({
 
   return (
     <>
-      <Hud />
+      <Hud hearts={hearts} maxHearts={maxHearts}/>
       <canvas
         id="canvas"
         ref={canvasRef}
