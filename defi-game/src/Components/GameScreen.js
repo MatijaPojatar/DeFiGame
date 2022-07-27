@@ -7,7 +7,7 @@ import "firebase/compat/database";
 import FirebaseService from "../Services/FirebaseService";
 import { VStack, Text, HStack } from "@chakra-ui/react";
 
-export default function GameScreen() {
+export default function GameScreen({nickname}) {
   useEffect(() => {
     firebase
       .auth()
@@ -18,22 +18,14 @@ export default function GameScreen() {
         const errorMessage = error.message;
         console.log(errorMessage);
       });
+
+  
   }, []);
 
   return (
     <div style={{ backgroundImage: "url(/background.jpg)" }}>
       <VStack justifyContent="center" alignItems="center" h="100vh">
-        <HStack marginBottom="10px">
-          <Text
-            margin="0"
-            lineHeight="1.15"
-            fontSize={["1.5em", "2em", "3em", "4em"]}
-            fontWeight="600"
-          >
-            DeFi Hero
-          </Text>
-        </HStack>
-        <LevelOne />
+        <LevelOne nickname={nickname}/>
       </VStack>
     </div>
   );

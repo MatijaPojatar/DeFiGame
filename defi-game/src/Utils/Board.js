@@ -8,7 +8,7 @@ import "firebase/compat/auth";
 import "firebase/compat/database";
 import firebase from "firebase/compat/app";
 
-export default function Board() {
+export default function Board({backgroundImageSrc,foregroundImageSrc,playerUpImageSrc,playerDownImageSrc,playerLeftImageSrc,playerRightImageSrc}) {
   const canvasRef = useRef(null);
   let players = {};
 
@@ -20,35 +20,27 @@ export default function Board() {
       const ctx = canvas.getContext("2d");
 
       const image = new Image();
-      image.src = "/clear_maps/FirstLevel.png";
-
-      const playerUpImage = new Image();
-      playerUpImage.src = "/sprites/player/playerUp.png";
-      const playerDownImage = new Image();
-      playerDownImage.src = "/sprites/player/playerDown.png";
-      const playerRightImage = new Image();
-      playerRightImage.src = "/sprites/player/playerRight.png";
-      const playerLeftImage = new Image();
-      playerLeftImage.src = "/sprites/player/playerLeft.png";
-
-      const girlUpImage = new Image();
-      girlUpImage.src = "/sprites/girl_char/girl_char_up.png";
-      const girlDownImage = new Image();
-      girlDownImage.src = "/sprites/girl_char/girl_char_down.png";
-      const girlRightImage = new Image();
-      girlRightImage.src = "/sprites/girl_char/girl_char_right.png";
-      const girlLeftImage = new Image();
-      girlLeftImage.src = "/sprites/girl_char/girl_char_left.png";
+      console.log(backgroundImageSrc)
+      image.src = backgroundImageSrc;
 
       const foregroundImage = new Image();
-      foregroundImage.src = "/foregrounds/foregroundFirstLevel.png";
+      foregroundImage.src = foregroundImageSrc;
+
+      const playerUpImage = new Image();
+      playerUpImage.src = playerUpImageSrc;
+      const playerDownImage = new Image();
+      playerDownImage.src = playerDownImageSrc;
+      const playerRightImage = new Image();
+      playerRightImage.src = playerRightImageSrc;
+      const playerLeftImage = new Image();
+      playerLeftImage.src = playerLeftImageSrc;
 
       const fireballImage = new Image();
       fireballImage.src = "/magic/fireball.png";
 
       //multiplayer
 
-      FirebaseService.logMyPlayer(config, canvas, girlDownImage);
+      FirebaseService.logMyPlayer(config, canvas, playerDownImage);
       FirebaseService.setUpPlayers(players, config);
 
       //sprites
@@ -61,21 +53,21 @@ export default function Board() {
         image: image,
       });
 
-      const girl = new Sprites.Sprite({
+      const player = new Sprites.Sprite({
         position: {
-          x: canvas.width / 2 - girlDownImage.width / 4 / 2,
-          y: canvas.height / 2 - girlDownImage.width / 4 / 2,
+          x: canvas.width / 2 - playerDownImage.width / 4 / 2,
+          y: canvas.height / 2 - playerDownImage.width / 4 / 2,
         },
         id: config.playerId,
-        image: girlDownImage,
+        image: playerDownImage,
         frames: {
           max: 4,
         },
         sprites: {
-          up: girlUpImage,
-          down: girlDownImage,
-          right: girlRightImage,
-          left: girlLeftImage,
+          up: playerUpImage,
+          down: playerDownImage,
+          right: playerRightImage,
+          left: playerLeftImage,
         },
         nickname: "girl",
       });
@@ -107,7 +99,7 @@ export default function Board() {
       let movables = [background, foreground, ...boundaries];
 
       AnimationService.animateMovement(
-        girl,
+        player,
         config,
         background,
         foreground,
@@ -139,6 +131,6 @@ export default function Board() {
   }, []);
 
   return (
-    <canvas id="canvas" ref={canvasRef} width="1024px" height="576px"></canvas>
+    <canvas id="canvas" ref={canvasRef} width="1300px" height="700px"></canvas>
   );
 }
