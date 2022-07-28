@@ -22,7 +22,7 @@ function App() {
       <Router>
       <div>
         <Routes>
-          <Route exact path="/game" element={<GameScreen charType={"Artic"}/>}>
+          <Route exact path="/game" element={<GameScreen/>}>
           </Route>
           <Route exact path="/" element={<MainMenu />}>
           </Route>
