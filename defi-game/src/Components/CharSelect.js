@@ -1,16 +1,30 @@
 import React from "react";
-import { VStack, HStack, Box } from "@chakra-ui/react";
-import { useRef, useEffect } from "react";
+import { VStack, HStack, Box, Input, Button } from "@chakra-ui/react";
+import { useRef, useEffect, useState } from "react";
 import "./CharSelect.css";
 
-export default function CharSelect({charSelected}) {
+export default function CharSelect({ charSelected }) {
   const canvasRef1 = useRef(null);
   const canvasRef2 = useRef(null);
   const canvasRef3 = useRef(null);
 
-  const chooseChar = (charType) => {
-    console.log(charType);
-    charSelected(charType)
+  const [nickname, setNickname] = useState("");
+  const [charType, setCharType] = useState("");
+  const [errorExists, setErrorExists] = useState(false);
+
+  const startGame = () => {
+    console.log("PLAY");
+    if (charType === "") {
+      alert("Select a char!");
+      return;
+    }
+    if (nickname === "") {
+      alert("Enter a nickname!");
+      setErrorExists(true)
+      return;
+    }
+    console.log(nickname);
+    charSelected(charType, nickname);
   };
 
   useEffect(() => {
@@ -92,15 +106,19 @@ export default function CharSelect({charSelected}) {
 
   return (
     <div>
-      <VStack justifyContent="center" alignItems="center" h="100vh">
+      <VStack justifyContent="center" alignItems="center" h="30vh">
         <div class="style-title">
           <h1>Select Character</h1>
         </div>
         <HStack>
           <VStack>
             <Box
+              borderWidth="3px"
+              borderRadius="lg"
+              padding="2px"
+              borderColor={charType === "Artic" ? "red" : "transparent"}
               onClick={() => {
-                chooseChar("Artic");
+                setCharType("Artic");
               }}
             >
               <div class="block  style-artic">
@@ -116,8 +134,11 @@ export default function CharSelect({charSelected}) {
           </VStack>
           <VStack>
             <Box
+              borderWidth="3px"
+              padding="2px"
+              borderColor={charType === "Princess" ? "red" : "transparent"}
               onClick={() => {
-                chooseChar("Princess");
+                setCharType("Princess");
               }}
             >
               <div class="block  style-princess">
@@ -133,8 +154,12 @@ export default function CharSelect({charSelected}) {
           </VStack>
           <VStack>
             <Box
+              borderWidth="3px"
+              borderRadius="lg"
+              padding="2px"
+              borderColor={charType === "Samurai" ? "red" : "transparent"}
               onClick={() => {
-                chooseChar("Samurai");
+                setCharType("Samurai");
               }}
             >
               <div class="block  style-samurai">
@@ -148,6 +173,28 @@ export default function CharSelect({charSelected}) {
               ></canvas>
             </Box>
           </VStack>
+        </HStack>
+        <br />
+        <HStack>
+          <Input
+            isInvalid={errorExists}
+            errorBorderColor='crimson'
+            fontFamily= "Shojumaru"
+            _placeholder={{ opacity: 1,color: 'red' }}
+            placeholder='Enter a nickname'
+            value={nickname}
+            onChange={(e) => {
+              setNickname(e.target.value);
+            }}
+          ></Input>
+          <Button
+            className="eightbit-select-btn "
+            onClick={() => {
+              startGame();
+            }}
+          >
+            Play Game
+          </Button>
         </HStack>
       </VStack>
     </div>

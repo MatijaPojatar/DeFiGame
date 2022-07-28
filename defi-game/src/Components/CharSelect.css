@@ -1,8 +1,4 @@
 @import url(https://fonts.googleapis.com/css?family=Nosifer|Codystar:300,400|Poiret+One|Limelight|Shojumaru|Titan+One|UnifrakturMaguntia|Press+Start+2P|Creepster|Playball|Griffy|Lobster|Bevan|Racing+Sans+One|Fontdiner+Swanky|Wire+One|Lato:100,300,400|Graduate);
-body {
-  padding: 0;
-  margin: 0;
-}
 
 .block {
   width: 100%;
@@ -47,5 +43,47 @@ h1 {
     font-size: 6rem;
 }
 
+
 /* */
 
+.eightbit-select-btn {
+  background: rgba(77, 98, 214, 1);
+  display: inline-block;
+  position: relative;
+  text-align: center;
+  padding: 7px;
+  font-family: "Shojumaru";
+  font-size: 1rem;
+  text-decoration: none;
+  color: red;
+  box-shadow: inset -4px -4px 0px 0px rgba(77, 98, 214, 1);
+  margin: 20px;
+}
+.eightbit-select-btn:hover,
+.eightbit-select-btn:focus {
+  background: rgba(77, 98, 214, 1);
+  box-shadow: inset -6px -6px 0px 0px rgba(77, 98, 214, 1);
+}
+.eightbit-select-btn:active {
+  box-shadow: inset 4px 4px 0px 0px rgba(77, 98, 214, 1);
+}
+.eightbit-select-btn:before,
+.eightbit-select-btn:after {
+  content: "";
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  box-sizing: content-box;
+}
+.eightbit-select-btn:before {
+  top: -6px;
+  left: 0;
+  border-top: 6px black solid;
+  border-bottom: 6px black solid;
+}
+.eightbit-select-btn:after {
+  left: -6px;
+  top: 0;
+  border-left: 6px black solid;
+  border-right: 6px black solid;
+}

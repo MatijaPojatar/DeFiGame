@@ -31,7 +31,7 @@ export default function GameScreen() {
     setLoading(false);
   };
 
-  const charSelected = (charTypeSelected) => {
+  const charSelected = (charTypeSelected, nickname) => {
     const image = new Image();
     image.src = "/sprites/" + charTypeSelected + "/down.png";
     let myPlayerTemp = {
@@ -43,11 +43,11 @@ export default function GameScreen() {
       charType: charTypeSelected,
       health: 5,
       maxHealth: 5,
-      nickname: "VitaminS",
+      nickname: nickname,
     };
     config.playerRef.set(myPlayerTemp);
-    setMyPlayer(myPlayerTemp)
-    setCharType(charTypeSelected)
+    setMyPlayer(myPlayerTemp);
+    setCharType(charTypeSelected);
     setShowCharSelect(false);
   };
 
