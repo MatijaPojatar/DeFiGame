@@ -1,5 +1,5 @@
 import React from "react";
-import { Heart } from "../Utils/icons";
+import { Heart } from "../../Utils/icons";
 
 export default function Hearts({ hearts, maxHearts }) {
   const heartElements = Array(maxHearts)

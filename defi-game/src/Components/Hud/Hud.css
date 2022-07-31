@@ -1,8 +1,8 @@
 .Hud {
   display: flex;
   position: absolute;
-  top: 4em;
-  left: 7em;
+  top: 1em;
+  left: 1em;
 }
 
 .HeartsGrid {

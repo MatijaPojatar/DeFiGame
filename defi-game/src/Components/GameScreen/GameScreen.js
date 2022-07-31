@@ -3,11 +3,12 @@ import { useEffect, useState } from "react";
 import firebase from "firebase/compat/app";
 import "firebase/compat/auth";
 import "firebase/compat/database";
-import FirebaseService from "../Services/FirebaseService";
+import FirebaseService from "../../Services/FirebaseService";
 import { VStack, Text, HStack } from "@chakra-ui/react";
 import "./GameScreen.css";
-import Board from "./Board";
-import CharSelect from "./CharSelect";
+import Board from "../Board/Board";
+import CharSelect from "../CharSelect/CharSelect";
+import ChatBox from "../ChatBox/ChatBox";
 
 export default function GameScreen() {
   const [loading, setLoading] = useState(true);
@@ -17,6 +18,7 @@ export default function GameScreen() {
   const [myPlayer, setMyPlayer] = useState({});
   const [config, setConfig] = useState({});
   const [charType, setCharType] = useState("");
+  const [messages, setMessages] = useState([]);
 
   const backgroundImage = "/clear_maps/FirstLevel.png";
   const foregroundImage = "/foregrounds/foregroundFirstLevel.png";
@@ -29,7 +31,14 @@ export default function GameScreen() {
     setMyPlayer(myPlayerTemp);
     setConfig(configTemp);
     setLoading(false);
+    if (!isNewPlayer) {
+      FirebaseService.sendMessage("has logged in!",myPlayerTemp.nickname,true)
+    }
   };
+
+  const callbackDisconnect=()=>{
+    FirebaseService.sendMessage("has logged out!", myPlayer.nickname, true);
+  }
 
   const charSelected = (charTypeSelected, nickname) => {
     const image = new Image();
@@ -45,6 +54,7 @@ export default function GameScreen() {
       maxHealth: 5,
       nickname: nickname,
     };
+    FirebaseService.sendMessage("has logged in!", myPlayerTemp.nickname, true);
     config.playerRef.set(myPlayerTemp);
     setMyPlayer(myPlayerTemp);
     setCharType(charTypeSelected);
@@ -62,22 +72,22 @@ export default function GameScreen() {
         console.log(errorMessage);
       });
 
-    FirebaseService.logMyPlayerV2(
-      boardWidth,
-      boardHeight,
-      charType,
-      callbackLog
-    );
+    FirebaseService.setUpChat(setMessages);
+
+    FirebaseService.logMyPlayerV2(charType, callbackLog,callbackDisconnect);
   }, []);
 
   return (
-    <div style={{ backgroundImage: "url(/background.jpg)" }}>
-      <VStack justifyContent="center" alignItems="center" h="100vh">
-        {!loading ? (
-          <>
-            {showCharSelect ? (
-              <CharSelect charSelected={charSelected} />
-            ) : (
+    <div
+      style={{ backgroundImage: "url(/background.jpg)" }}
+      className="game-container"
+    >
+      {!loading ? (
+        <>
+          {showCharSelect ? (
+            <CharSelect charSelected={charSelected} />
+          ) : (
+            <>
               <Board
                 backgroundImageSrc={backgroundImage}
                 foregroundImageSrc={foregroundImage}
@@ -88,20 +98,24 @@ export default function GameScreen() {
                 charType={charType}
                 config={config}
                 myPlayer={myPlayer}
+                boardHeight={boardHeight}
+                boardWidth={boardWidth}
+                className="board"
               />
-            )}
-          </>
-        ) : (
-          <div class="spinner-box">
-            <div class="configure-border-1">
-              <div class="configure-core"></div>
-            </div>
-            <div class="configure-border-2">
-              <div class="configure-core"></div>
-            </div>
+              <ChatBox messages={messages} nickname={myPlayer.nickname} />
+            </>
+          )}
+        </>
+      ) : (
+        <div className="spinner-box">
+          <div className="configure-border-1">
+            <div className="configure-core"></div>
           </div>
-        )}
-      </VStack>
+          <div className="configure-border-2">
+            <div className="configure-core"></div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

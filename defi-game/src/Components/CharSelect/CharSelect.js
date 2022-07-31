@@ -106,8 +106,8 @@ export default function CharSelect({ charSelected }) {
 
   return (
     <div>
-      <VStack justifyContent="center" alignItems="center" h="30vh">
-        <div class="style-title">
+      <VStack justifyContent="center" alignItems="center" h="100vh">
+        <div className="style-title">
           <h1>Select Character</h1>
         </div>
         <HStack>
@@ -121,7 +121,7 @@ export default function CharSelect({ charSelected }) {
                 setCharType("Artic");
               }}
             >
-              <div class="block  style-artic">
+              <div className="block  style-artic">
                 <h1>Artic</h1>
               </div>
               <canvas
@@ -141,7 +141,7 @@ export default function CharSelect({ charSelected }) {
                 setCharType("Princess");
               }}
             >
-              <div class="block  style-princess">
+              <div className="block  style-princess">
                 <h1>Princess</h1>
               </div>
               <canvas
@@ -162,7 +162,7 @@ export default function CharSelect({ charSelected }) {
                 setCharType("Samurai");
               }}
             >
-              <div class="block  style-samurai">
+              <div className="block  style-samurai">
                 <h1>Samurai</h1>
               </div>
               <canvas

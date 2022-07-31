@@ -1,14 +1,14 @@
 import "./App.css";
 import { useEffect,useState } from "react";
-import GameScreen from "./Components/GameScreen";
+import GameScreen from "../GameScreen/GameScreen";
 import {
   BrowserRouter as Router,
   Routes,
   Route,
 } from "react-router-dom";
-import MainMenu from "./Components/MainMenu";
-import CharSelect from "./Components/CharSelect";
-import Test from "./Components/Test";
+import MainMenu from "../MainMenu/MainMenu";
+import CharSelect from "../CharSelect/CharSelect";
+import Test from "../Test/Test";
 
 function App() {
 

@@ -1,13 +1,13 @@
 import React, { useRef, useEffect, useState } from "react";
 import { Howl } from "howler";
-import Sprites from "../Classes/Sprites";
-import AnimationService from "../Services/AnimationService";
-import UtilsService from "../Services/UtilsService";
-import FirebaseService from "../Services/FirebaseService";
+import Sprites from "../../Classes/Sprites";
+import AnimationService from "../../Services/AnimationService";
+import UtilsService from "../../Services/UtilsService";
+import FirebaseService from "../../Services/FirebaseService";
 import "firebase/compat/auth";
 import "firebase/compat/database";
 import firebase from "firebase/compat/app";
-import Hud from "./Hud";
+import Hud from "../Hud/Hud";
 
 export default function Board({
   backgroundImageSrc,
@@ -19,6 +19,8 @@ export default function Board({
   charType,
   config,
   myPlayer,
+  boardWidth,
+  boardHeight
 }) {
   const canvasRef = useRef(null);
   const [hearts, setHearts] = useState(0);
@@ -190,14 +192,14 @@ export default function Board({
   }, []);
 
   return (
-    <>
+    <div className="board">
       <Hud hearts={hearts} maxHearts={maxHearts} />
       <canvas
         id="canvas"
         ref={canvasRef}
-        width="1300px"
-        height="700px"
+        width={boardWidth}
+        height={boardHeight}
       ></canvas>
-    </>
+    </div>
   );
 }

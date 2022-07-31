@@ -13,7 +13,7 @@ const firebaseConfig = {
 
 const app = firebase.initializeApp(firebaseConfig);
 
-const setUpPlayers = async (players,config) => {
+const setUpPlayers = async (players, config) => {
   const allPlayersRef = firebase.database().ref("players");
 
   allPlayersRef.on("value", (snapshot) => {
@@ -26,7 +26,7 @@ const setUpPlayers = async (players,config) => {
 
   allPlayersRef.on("child_added", (snapshot) => {
     const addedPlayer = snapshot.val();
-    console.log(config.playerId)
+    console.log(config.playerId);
     if (addedPlayer.id !== config.playerId) {
       console.log("NEW PLAYER");
       console.log(addedPlayer);
@@ -37,74 +37,83 @@ const setUpPlayers = async (players,config) => {
   allPlayersRef.on("child_removed", (snapshot) => {
     const removedPlayer = snapshot.val();
     console.log("REMOVED PLAYER");
-    console.log(removedPlayer)
-    delete players[removedPlayer.id]
+    console.log(removedPlayer);
+    delete players[removedPlayer.id];
   });
 };
 
-const logMyPlayer = async (config, canvas, image,continueInit,charType,checkPlayer) => {
+const logMyPlayerV2 = async (charType, callbackLog,callbackDisconnect) => {
   firebase.auth().onAuthStateChanged(async (user) => {
     console.log(user);
     if (user) {
+      let isNewPlayer = false;
+      let config = {};
       config.playerId = user.uid;
       config.playerRef = firebase.database().ref(`players/${config.playerId}`);
 
-      const getPromise=await config.playerRef.get();
-      let myPlayer=getPromise.val();
-      console.log(myPlayer)
+      const image = new Image();
+      image.src = "/sprites/" + charType + "/down.png";
 
-      if(!myPlayer){
-        myPlayer={
-          id: config.playerId,
-          x: canvas.width / 2 - image.width / 4 / 2,
-          y: canvas.height / 2 - image.width / 4 / 2,
-          sprite: "down",
-          val: 0,
-          charType: charType,
-          health : 5,
-          maxHealth: 5,
-          nickname: "VitaminS"
-        }
-        config.playerRef.set(myPlayer);
+      const getPromise = await config.playerRef.get();
+      let myPlayer = getPromise.val();
+      console.log(myPlayer);
+
+      if (!myPlayer) {
+        isNewPlayer = true;
       }
 
-      config.playerRef.onDisconnect().remove(async ()=>{
+      config.playerRef.onDisconnect().remove(async () => {
+        callbackDisconnect()
       });
-      config.check=true
-      continueInit(myPlayer)
-      checkPlayer(false,false)
+      config.check = true;
+      callbackLog(myPlayer, isNewPlayer, config);
     } else {
     }
   });
 };
 
-const logMyPlayerV2 = async ( boardWidth,boardHeight,charType,callbackLog) => {
-  firebase.auth().onAuthStateChanged(async (user) => {
-    console.log(user);
-    if (user) {
-      let isNewPlayer=false;
-      let config={}
-      config.playerId = user.uid;
-      config.playerRef = firebase.database().ref(`players/${config.playerId}`);
+const setUpChat = async (setMessages) => {
+  const chatRef = firebase.database().ref("chat");
 
-      const image=new Image()
-      image.src="/sprites/" + charType + "/down.png"
+  chatRef.on("child_added", (snapshot) => {
+    console.log("=== NEW MESSAGE ===")
+    console.log(snapshot.val())
+    const newMessage = snapshot.val();
+    let msgDate = new Date(newMessage.timestamp);
+    let now=new Date()
+    now.setMinutes(now.getMinutes()-1)
+    if (msgDate.getTime() >= now.getTime())
+      setMessages((messages) => [...messages, newMessage]);
+  });
 
-      const getPromise=await config.playerRef.get();
-      let myPlayer=getPromise.val();
-      console.log(myPlayer)
+  chatRef.on("value", (snapshot) => {
+    console.log("==== NEW SNAPSHOT ===")
+    console.log(snapshot.val())
+  });
 
-      if(!myPlayer){
-        isNewPlayer=true
-      }
+  console.log("==== FINISHED SETTING UP CHAT ====")
+};
 
-      config.playerRef.onDisconnect().remove(async ()=>{
-      });
-      config.check=true
-      callbackLog(myPlayer,isNewPlayer,config)
+const sendMessage = async (message, nickname,isLog) => {
+  const chatRef = firebase.database().ref("chat");
+  let newId;
+  await chatRef.get().then((snapshot) => {
+    if (snapshot.val()) {
+      newId = snapshot.val().length;
     } else {
+      newId = 0;
     }
+  });
+  const newMessageRef = firebase.database().ref(`chat/${newId}`);
+  let date = new Date();
+  console.log(date);
+  newMessageRef.set({
+    id: newId,
+    text: message,
+    timestamp: date.toString(),
+    nickname: nickname,
+    log: isLog
   });
 };
 
-export default { app, setUpPlayers, logMyPlayer,logMyPlayerV2 };
+export default { app, setUpPlayers, logMyPlayerV2, setUpChat, sendMessage };
